@@ -2,6 +2,7 @@ package com.winsam.apilab.winsam_api_lab.comm.redis.web;
 
 import com.winsam.apilab.winsam_api_lab.comm.redis.payload.RedisRControllerPayload;
 import com.winsam.apilab.winsam_api_lab.comm.redis.service.RedisService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/redis")
+@Tag(name = "Redis API")
 public class RedisRController {
 
     private final RedisService redisService;

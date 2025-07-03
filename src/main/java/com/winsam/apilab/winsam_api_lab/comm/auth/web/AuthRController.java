@@ -4,6 +4,7 @@ import com.winsam.apilab.winsam_api_lab.comm.auth.entity.TokenDTO;
 import com.winsam.apilab.winsam_api_lab.comm.auth.payload.AuthRControllerPayload;
 import com.winsam.apilab.winsam_api_lab.comm.auth.service.AuthWebService;
 import com.winsam.apilab.winsam_api_lab.comm.auth.token.TokenProvider;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Auth API")
 public class AuthRController {
 
     @Autowired
