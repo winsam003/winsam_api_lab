@@ -1,4 +1,5 @@
-package com.winsam.apilab.winsam_api_lab.comm.service;
+package com.winsam.apilab.winsam_api_lab.comm.auth.service;
+import com.winsam.apilab.winsam_api_lab.comm.auth.payload.AuthRControllerPayload;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -21,7 +22,7 @@ import java.util.Map;
 
 public interface AuthWebService {
 
-    Map<String, String> getAuthJwtToken(String userId);
-    Map<String, String> getNewAuthJwtToken(String refreshToken);
+    Map<String, String> getAuthJwtToken(AuthRControllerPayload.AuthLoginRequest req);
+    Map<String, String> getNewAuthJwtToken(AuthRControllerPayload.TokenRefreshRequest req);
 
 }

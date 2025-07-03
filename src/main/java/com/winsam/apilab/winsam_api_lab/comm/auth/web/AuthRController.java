@@ -1,14 +1,14 @@
-package com.winsam.apilab.winsam_api_lab.comm.auth;
+package com.winsam.apilab.winsam_api_lab.comm.auth.web;
 
-import com.winsam.apilab.winsam_api_lab.comm.payload.AuthRControllerPayload;
-import com.winsam.apilab.winsam_api_lab.comm.service.AuthWebService;
-import com.winsam.apilab.winsam_api_lab.comm.service.impl.TokenProvider;
+import com.winsam.apilab.winsam_api_lab.comm.auth.entity.TokenDTO;
+import com.winsam.apilab.winsam_api_lab.comm.auth.payload.AuthRControllerPayload;
+import com.winsam.apilab.winsam_api_lab.comm.auth.service.AuthWebService;
+import com.winsam.apilab.winsam_api_lab.comm.auth.token.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -38,21 +38,22 @@ public class AuthRController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@ModelAttribute AuthRControllerPayload.AuthLoginRequest req){
 
-        Map<String, String> returnToken = authWebService.getAuthJwtToken(req.getUserId());
+        Map<String, String> returnToken = authWebService.getAuthJwtToken(req);
 
         return ResponseEntity.ok(returnToken);
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@RequestBody AuthRControllerPayload.TokenRefreshRequest req) {
-        String refreshToken = req.getRefreshToken();
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setRefreshToken(req.getRefreshToken());
 
-        if (!tokenProvider.validateToken(refreshToken)) {
+        if (!tokenProvider.validateToken(tokenDTO.getRefreshToken())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
         }
 
 
-        Map<String, String> returnToken = authWebService.getNewAuthJwtToken(req.getRefreshToken());
+        Map<String, String> returnToken = authWebService.getNewAuthJwtToken(req);
 
         return ResponseEntity.ok(returnToken);
     }

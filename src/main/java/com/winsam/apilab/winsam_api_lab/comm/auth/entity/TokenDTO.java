@@ -1,4 +1,4 @@
-package com.winsam.apilab.winsam_api_lab.comm.payload;
+package com.winsam.apilab.winsam_api_lab.comm.auth.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * ************************************************************************
- * File Name   : AuthRControllerPayload
+ * File Name   : TokenDTO
  * Author      : Dev-004
- * Date        : 2025-07-02
+ * Date        : 2025-07-03
  * Description :
  * -------------------------- Modification Log ----------------------------
  * 버젼 :                  수정자 :
@@ -19,20 +19,13 @@ import lombok.NoArgsConstructor;
  * 내용 :
  * ************************************************************************
  */
-public class AuthRControllerPayload {
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class AuthLoginRequest{
-        String userId;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class TokenRefreshRequest{
-        String refreshToken;
-    }
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class TokenDTO {
+    String userId;
+    String userEmail;
+    String userRole;
+    String accessToken;
+    String refreshToken;
 }

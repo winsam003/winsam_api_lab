@@ -1,5 +1,7 @@
-package com.winsam.apilab.winsam_api_lab.comm.service.impl;
+package com.winsam.apilab.winsam_api_lab.comm.auth.token;
 
+import com.winsam.apilab.winsam_api_lab.comm.auth.entity.TokenDTO;
+import com.winsam.apilab.winsam_api_lab.comm.auth.payload.AuthRControllerPayload;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,22 +41,26 @@ public class TokenProvider {
     }
 
     // Access Token 생성
-    public String createAccessToken(String userId) {
+    public String createAccessToken(TokenDTO tokenDTO) {
         return Jwts.builder()
-                .setSubject(userId)
+                .setSubject(tokenDTO.getUserId())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
+                .claim("userEmail", tokenDTO.getUserEmail())
+                .claim("userRole", tokenDTO.getUserRole())
                 .compact();
     }
 
     // Refresh Token 생성
-    public String createRefreshToken(String userId) {
+    public String createRefreshToken(TokenDTO tokenDTO) {
         return Jwts.builder()
-                .setSubject(userId)
+                .setSubject(tokenDTO.getUserId())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
+                .claim("userEmail", tokenDTO.getUserEmail())
+                .claim("userRole", tokenDTO.getUserRole())
                 .compact();
     }
 
@@ -99,8 +105,8 @@ public class TokenProvider {
 
 
 
-    public Authentication getAuthentication(String token) {
-        Claims claims = parseToken(token);
+    public Authentication getAuthentication(TokenDTO tokenDTO) {
+        Claims claims = parseToken(tokenDTO.getAccessToken());
 
         String userId = claims.getSubject();
 

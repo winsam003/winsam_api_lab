@@ -1,6 +1,7 @@
 package com.winsam.apilab.winsam_api_lab.config.security.jwt;
 
-import com.winsam.apilab.winsam_api_lab.comm.service.impl.TokenProvider;
+import com.winsam.apilab.winsam_api_lab.comm.auth.entity.TokenDTO;
+import com.winsam.apilab.winsam_api_lab.comm.auth.token.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,10 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.IOException;
 
@@ -35,9 +32,10 @@ public class TokenProcessFilter extends OncePerRequestFilter {
     TokenProvider tokenProvider = new TokenProvider();
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = resolveToken(request);
-        if (token != null && tokenProvider.validateToken(token)) {
-            Authentication auth = tokenProvider.getAuthentication(token);
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setAccessToken(resolveToken(request));
+        if (tokenDTO.getAccessToken() != null && tokenProvider.validateToken(tokenDTO.getAccessToken())) {
+            Authentication auth = tokenProvider.getAuthentication(tokenDTO);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         filterChain.doFilter(request, response);

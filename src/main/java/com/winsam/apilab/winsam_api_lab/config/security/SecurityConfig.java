@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/auth/**").permitAll() // 인증 없이 허용
+                        .requestMatchers("/redis/**").permitAll() // 인증 없이 허용
                         .anyRequest().authenticated()            // 나머지는 인증 필요
                 )
                 .addFilterBefore(new TokenProcessFilter(), UsernamePasswordAuthenticationFilter.class);
