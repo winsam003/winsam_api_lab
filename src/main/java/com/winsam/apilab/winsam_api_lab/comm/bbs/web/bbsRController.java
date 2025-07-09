@@ -1,6 +1,8 @@
 package com.winsam.apilab.winsam_api_lab.comm.bbs.web;
 
 import com.winsam.apilab.winsam_api_lab.comm.bbs.entity.BBSPostVO;
+import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSListReqVO;
+import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSListResVO;
 import com.winsam.apilab.winsam_api_lab.comm.bbs.service.BBSCommService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +23,9 @@ public class bbsRController {
     }
 
     @GetMapping("/getBBSList")
-    public ResponseEntity<?> getBBSPostList(){
+    public ResponseEntity<?> getBBSPostList(BBSListReqVO reqVO){
 
-        List<BBSPostVO> resultList = bbsCommService.getBBSList();
+        BBSListResVO resultList = bbsCommService.getBBSList(reqVO);
 
         return ResponseEntity.ok(resultList);
     }
