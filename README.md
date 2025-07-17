@@ -6,7 +6,7 @@
 5. postgreSQL: 14.1
 
 
-## front, back, server 모두 이곳에 기록
+## 📰 front, back, server 모두 이곳에 기록
 front: https://github.com/winsam003/winsam_front_lab.git
 server: https://182.209.161.143
 
