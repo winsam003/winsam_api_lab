@@ -18,3 +18,5 @@ server: https://182.209.161.143
 5. 2025-07-21[server] : 집 남은 컴퓨터 활용 DB 서버, docker 구현 (* 방구석 서버 로 통칭)
 6. 2025-07-23[front] : 임시 front 구현 (https://github.com/winsam003/winsam_front_lab.git)
 7. 2025-07-23[server] : 방구석서버 docker를 활용한 API, front 서버 구현 (https://182.209.161.143)
+8. 2025-07-24[server] : 가비아 url 구매 domain 설정 (blog.winsam.xyz)
+9. 2025-07-25[front] : 기본 페이지 front 템플릿 구현
