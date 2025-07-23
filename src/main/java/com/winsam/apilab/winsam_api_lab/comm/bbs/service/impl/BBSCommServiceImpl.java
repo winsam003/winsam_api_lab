@@ -1,8 +1,7 @@
 package com.winsam.apilab.winsam_api_lab.comm.bbs.service.impl;
 
 import com.winsam.apilab.winsam_api_lab.comm.bbs.entity.BBSPostVO;
-import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSListReqVO;
-import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSListResVO;
+import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.*;
 import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.comm.CommPagingResVO;
 import com.winsam.apilab.winsam_api_lab.comm.bbs.utill.UtillBox;
 import com.winsam.apilab.winsam_api_lab.comm.mapper.BBSPostPostgre;
@@ -23,6 +22,7 @@ public class BBSCommServiceImpl implements BBSCommService {
     }
 
 
+    // 게시글 리스트
     @Override
     public BBSListResVO getBBSList(BBSListReqVO reqVO) {
 
@@ -44,5 +44,63 @@ public class BBSCommServiceImpl implements BBSCommService {
         resVO.setPageInfo(pagingVO);
 
         return resVO;
+    }// 게시글 리스트
+
+
+    // 게시글 상세
+    @Override
+    public BBSPostDetailResVO getBBSPostDetail(BBSPostDetailReqVO reqVO) {
+
+        BBSPostDetailResVO resVO = new BBSPostDetailResVO();
+
+        resVO = bbsPostPostgre.getBBSPostDetail(reqVO);
+
+        return resVO;
+    }// 게시글 상세
+
+
+    // 게시글 등록
+    @Override
+    public BBSPostResVO getBBSPost(BBSPostReqVO reqVO) {
+
+        BBSPostResVO resVO = new BBSPostResVO();
+
+        if(bbsPostPostgre.postBBSPost(reqVO) > 0){
+            resVO = null;
+        }else{
+            // exception
+        }
+
+        return resVO;
+    }// 게시글 등록
+
+    // 게시글 수정
+    @Override
+    public BBSPatchResVO patchBBSPost(BBSPatchReqVO reqVO) {
+
+        BBSPatchResVO resVO = new BBSPatchResVO();
+
+        if(bbsPostPostgre.patchBBSPost(reqVO) > 0){
+            resVO = null;
+        }else{
+            // exception
+        }
+
+        return resVO;
+    }// 게시글 수정
+
+    @Override
+    public BBSDeleteResVO deleteBBSPost(BBSDeleteReqVO reqVO) {
+
+        BBSDeleteResVO resVO = new BBSDeleteResVO();
+
+        if(bbsPostPostgre.deleteBBSPost(reqVO) > 0){
+            resVO = null;
+        }else{
+            // exception
+        }
+
+        return resVO;
     }
 }
+

@@ -22,4 +22,47 @@
         LIMIT #{size} OFFSET #{offset};
     </select>
 
+    <select id="getBBSPostDetail" parameterMap="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSPostDetailResVO">
+        SELECT
+            *
+        FROM
+            common.bbs_post tbp
+        WHERE 1=1
+            AND tbp.bbs_numb = #{bbs_numb}
+            AND tbp.post_numb = #{post_numb}
+            AND tbp.use_at = 'Y'
+    </select>
+
+    <insert id="postBBSPost">
+        INSERT INTO
+            common.bbs_post
+        (
+--             컬럼명을 몰라서 보고 짤 것
+        )
+    </insert>
+
+    <update id="patchBBSPost">
+        UPDATE common.bbs_post
+        SET
+            (
+--             컬럼명을 몰라서 보고 짤 것
+            )
+        WHERE 1=1
+            AND bbs_numb = #{bbs_numb}
+            AND post_numb = #{post_numb}
+            AND use_at = 'Y'
+    </update>
+
+    <update id="deleteBBSPost">
+        UPDATE common.bbs_post
+        SET
+            (
+                use_at = 'N'
+            )
+        WHERE 1=1
+            AND bbs_numb = #{bbs_numb}
+            AND post_numb = #{post_numb}
+            AND use_at = 'Y'
+    </update>
+
 </mapper>
