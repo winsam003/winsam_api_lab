@@ -31,7 +31,7 @@ public class BBSCommServiceImpl implements BBSCommService {
         CommPagingResVO pagingVO = new CommPagingResVO();
 
         // 2. 총 게시글 수 , 페이징 정보
-        int totalCount = bbsPostPostgre.getBBSPostListCount();
+        int totalCount = bbsPostPostgre.getBBSPostListCount(reqVO);
         pagingVO = UtillBox.setPagingRes(reqVO.getPage(), reqVO.getSize(), totalCount);
 
         // 3. 게시글 리스트

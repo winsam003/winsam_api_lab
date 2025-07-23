@@ -8,7 +8,7 @@ import java.util.List;
 public interface BBSPostPostgre {
 
     // 게시글 수
-    int getBBSPostListCount();
+    int getBBSPostListCount(BBSListReqVO reqVO);
 
     // 게시글 리스트
     List<BBSPostVO> getBBSPostList(BBSListReqVO reqVO);

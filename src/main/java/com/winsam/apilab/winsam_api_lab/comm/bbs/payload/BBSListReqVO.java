@@ -7,4 +7,5 @@ import lombok.NoArgsConstructor;
 
 @Data
 public class BBSListReqVO extends CommPagingReqVO {
+    private String bbs_numb;
 }

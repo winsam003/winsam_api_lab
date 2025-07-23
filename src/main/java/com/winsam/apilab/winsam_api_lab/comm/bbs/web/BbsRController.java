@@ -1,27 +1,28 @@
 package com.winsam.apilab.winsam_api_lab.comm.bbs.web;
 
-import com.winsam.apilab.winsam_api_lab.comm.bbs.entity.BBSPostVO;
 import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.*;
 import com.winsam.apilab.winsam_api_lab.comm.bbs.service.BBSCommService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/bbs")
-public class bbsRController {
+public class BbsRController {
 
     BBSCommService bbsCommService;
 
-    public bbsRController(BBSCommService bbsCommService) {
+    public BbsRController(BBSCommService bbsCommService) {
         this.bbsCommService = bbsCommService;
     }
 
     // 게시판 리스트 GET
-    @GetMapping("/list")
-    public ResponseEntity<?> getBBSPostList(BBSListReqVO reqVO){
+    @GetMapping("/list/{bbs_numb}/{page}/{size}")
+    public ResponseEntity<?> getBBSPostList(@PathVariable String bbs_numb, @PathVariable int page, @PathVariable int size){
+
+        BBSListReqVO reqVO = new BBSListReqVO();
+        reqVO.setBbs_numb(bbs_numb);
+        reqVO.setPage(page);
+        reqVO.setSize(size);
 
         BBSListResVO resultList = bbsCommService.getBBSList(reqVO);
 
@@ -36,7 +37,7 @@ public class bbsRController {
 
     // 게시글 등록
     @PostMapping("/write")
-    public ResponseEntity<?> PostBBSPost(BBSPostReqVO reqVO){
+    public ResponseEntity<?> PostBBSPost(@RequestBody BBSPostReqVO reqVO){
 
         BBSPostResVO resVO = new BBSPostResVO();
 

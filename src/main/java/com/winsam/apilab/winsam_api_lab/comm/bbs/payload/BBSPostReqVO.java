@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BBSPostReqVO extends BasicVO {
-    private String BBSSubject;
-    private String BBSContent;
+    private String bbs_numb;
+    private String post_subj;
+    private String post_cnts;
 }

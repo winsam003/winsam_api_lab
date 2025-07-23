@@ -5,40 +5,61 @@
 
 <mapper namespace="com.winsam.apilab.winsam_api_lab.comm.mapper.BBSPostPostgre">
 
-    <select id="getBBSPostListCount" resultType="int">
+    <select id="getBBSPostListCount" parameterType="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSListReqVO" resultType="int">
         SELECT
             COUNT(*)
         FROM
             common.bbs_post
+        WHERE 1=1
+          AND use_at = 'Y'
+          AND bbs_code = #{bbs_numb}
     </select>
 
     <select id="getBBSPostList" parameterType="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSListReqVO" resultType="com.winsam.apilab.winsam_api_lab.comm.bbs.entity.BBSPostVO">
         SELECT
             *
         FROM
-            common.bbs_post tbp
-        WHERE
-            tbp.use_at = 'Y'
+            common.bbs_post
+        WHERE 1=1
+            AND use_at = 'Y'
+            AND bbs_code = #{bbs_numb}
+        ORDER BY bbs_no DESC
         LIMIT #{size} OFFSET #{offset};
     </select>
 
-    <select id="getBBSPostDetail" parameterMap="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSPostDetailResVO">
-        SELECT
-            *
-        FROM
-            common.bbs_post tbp
-        WHERE 1=1
-            AND tbp.bbs_numb = #{bbs_numb}
-            AND tbp.post_numb = #{post_numb}
-            AND tbp.use_at = 'Y'
-    </select>
+<!--    <select id="getBBSPostDetail" parameterMap="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSPostDetailResVO">-->
+<!--        SELECT-->
+<!--            *-->
+<!--        FROM-->
+<!--            common.bbs_post tbp-->
+<!--        WHERE 1=1-->
+<!--            AND tbp.bbs_numb = #{bbs_numb}-->
+<!--            AND tbp.post_numb = #{post_numb}-->
+<!--            AND tbp.use_at = 'Y'-->
+<!--    </select>-->
 
-    <insert id="postBBSPost">
+    <insert id="postBBSPost" parameterType="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSPostReqVO">
         INSERT INTO
             common.bbs_post
-        (
---             컬럼명을 몰라서 보고 짤 것
-        )
+            (
+                bbs_code,
+                bbs_post_sbjt,
+                bbs_post_cnts,
+                use_at,
+                disp_at,
+                reg_user,
+                reg_date
+            )
+        VALUES
+            (
+                #{bbs_numb},
+                #{post_subj},
+                #{post_cnts},
+                'Y',
+                'Y',
+                'system',
+                now()
+            )
     </insert>
 
     <update id="patchBBSPost">
