@@ -20,3 +20,5 @@ server: http://blog.winsam.xyz
 7. 2025-07-23[server] : 방구석서버 docker를 활용한 API, front 서버 구현 (https://182.209.161.143)
 8. 2025-07-24[server] : 가비아 url 구매 domain 설정 (http://blog.winsam.xyz)
 9. 2025-07-25[front] : 기본 페이지 front 템플릿 구현
+10. 2025-07-25[front] : Markdown 형식 게시글 등록 화면 구현
+11. 2025-07-25[back] : 상세, 수정, 삭제 기본 구조 구현
