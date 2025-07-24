@@ -30,9 +30,16 @@ public class BbsRController {
     }// 게시판 리스트 GET
 
     // 게시판 상세 GET
-    @GetMapping("/detail")
-    public ResponseEntity<?> getBBSPostDetail(BBSPostDetailReqVO reqVO){
-        return ResponseEntity.ok().build();
+    @GetMapping("/detail/{bbs_numb}/{post_numb}")
+    public ResponseEntity<?> getBBSPostDetail(@PathVariable String bbs_numb, @PathVariable int post_numb){
+
+        BBSPostDetailReqVO reqVO = new BBSPostDetailReqVO();
+        reqVO.setBbs_numb(bbs_numb);
+        reqVO.setPost_numb(post_numb);
+
+        BBSPostDetailResVO resVO = bbsCommService.getBBSPostDetail(reqVO);
+
+        return ResponseEntity.ok(resVO);
     }// 게시판 상세 GET
 
     // 게시글 등록

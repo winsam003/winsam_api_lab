@@ -27,16 +27,16 @@
         LIMIT #{size} OFFSET #{offset};
     </select>
 
-<!--    <select id="getBBSPostDetail" parameterMap="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSPostDetailResVO">-->
-<!--        SELECT-->
-<!--            *-->
-<!--        FROM-->
-<!--            common.bbs_post tbp-->
-<!--        WHERE 1=1-->
-<!--            AND tbp.bbs_numb = #{bbs_numb}-->
-<!--            AND tbp.post_numb = #{post_numb}-->
-<!--            AND tbp.use_at = 'Y'-->
-<!--    </select>-->
+    <select id="getBBSPostDetail" parameterType="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSPostDetailReqVO" resultType="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSPostDetailResVO">
+        SELECT
+            *
+        FROM
+            common.bbs_post tbp
+        WHERE 1=1
+            AND tbp.bbs_code = #{bbs_numb}
+            AND tbp.bbs_no = #{post_numb}
+            AND tbp.use_at = 'Y'
+    </select>
 
     <insert id="postBBSPost" parameterType="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSPostReqVO">
         INSERT INTO
