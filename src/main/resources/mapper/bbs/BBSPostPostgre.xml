@@ -57,21 +57,32 @@
                 #{post_cnts},
                 'Y',
                 'Y',
-                'system',
+                #{reg_user},
                 now()
             )
     </insert>
 
-    <update id="patchBBSPost">
+    <update id="patchBBSPost" parameterType="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSPatchReqVO">
         UPDATE common.bbs_post
         SET
-            (
---             컬럼명을 몰라서 보고 짤 것
-            )
+            bbs_post_sbjt = #{post_subj},
+            bbs_post_cnts = #{post_cnts},
+            updt_user = #{updt_user},
+            updt_date = NOW()
         WHERE 1=1
-            AND bbs_numb = #{bbs_numb}
-            AND post_numb = #{post_numb}
+            AND bbs_code = #{bbs_numb}
+            AND bbs_no = #{post_numb}
             AND use_at = 'Y'
+    </update>
+
+    <update id="PlusBBSPostReadCnt" parameterType="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSPatchReqVO">
+        UPDATE common.bbs_post
+        SET
+            read_cnt = read_cnt + 1
+        WHERE 1=1
+          AND bbs_code = #{bbs_numb}
+          AND bbs_no = #{post_numb}
+          AND use_at = 'Y'
     </update>
 
     <update id="deleteBBSPost">

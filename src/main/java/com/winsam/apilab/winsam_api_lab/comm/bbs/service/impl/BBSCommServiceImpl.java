@@ -53,6 +53,7 @@ public class BBSCommServiceImpl implements BBSCommService {
 
         BBSPostDetailResVO resVO = new BBSPostDetailResVO();
 
+        bbsPostPostgre.PlusBBSPostReadCnt(reqVO);
         resVO = bbsPostPostgre.getBBSPostDetail(reqVO);
 
         return resVO;
@@ -64,6 +65,10 @@ public class BBSCommServiceImpl implements BBSCommService {
     public BBSPostResVO getBBSPost(BBSPostReqVO reqVO) {
 
         BBSPostResVO resVO = new BBSPostResVO();
+
+        if(reqVO.getReg_user() == null || "".equals(reqVO.getReg_user())){
+            reqVO.setReg_user("system");
+        }
 
         if(bbsPostPostgre.postBBSPost(reqVO) > 0){
             resVO = null;
@@ -79,6 +84,10 @@ public class BBSCommServiceImpl implements BBSCommService {
     public BBSPatchResVO patchBBSPost(BBSPatchReqVO reqVO) {
 
         BBSPatchResVO resVO = new BBSPatchResVO();
+
+        if(reqVO.getReg_user() == null || "".equals(reqVO.getReg_user())){
+            reqVO.setUpdt_user("system");
+        }
 
         if(bbsPostPostgre.patchBBSPost(reqVO) > 0){
             resVO = null;

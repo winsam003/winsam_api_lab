@@ -55,7 +55,7 @@ public class BbsRController {
 
     // 게시글 수정
     @PatchMapping("/update")
-    public ResponseEntity<?> PatchBBSPost(BBSPatchReqVO reqVO){
+    public ResponseEntity<?> PatchBBSPost(@RequestBody BBSPatchReqVO reqVO){
 
         BBSPatchResVO resVO = new BBSPatchResVO();
 

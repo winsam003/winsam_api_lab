@@ -16,6 +16,9 @@ public interface BBSPostPostgre {
     // 게시글 상세
     BBSPostDetailResVO getBBSPostDetail(BBSPostDetailReqVO reqVO);
 
+    // 게시글 조회수 plus
+    int PlusBBSPostReadCnt(BBSPostDetailReqVO reqVO);
+
     // 게시글 등록
     int postBBSPost(BBSPostReqVO reqVO);
 

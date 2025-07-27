@@ -23,4 +23,5 @@ public class BBSPostVO {
     private String updt_user;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private Timestamp updt_date;
+    private int read_cnt;
 }
