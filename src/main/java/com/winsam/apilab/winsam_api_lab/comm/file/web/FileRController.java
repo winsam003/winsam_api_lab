@@ -27,7 +27,8 @@ import java.util.UUID;
 @RequestMapping("/file")
 public class FileRController {
 
-    private final String uploadDir = "C:/uploadfiles"; // 윈도우 경로 사용
+//    private final String uploadDir = "C:/uploadfiles"; // 윈도우 경로 사용
+    private final String uploadDir = "/uploadfiles";
 
     @PostMapping("/upload")
     public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file){
@@ -51,7 +52,7 @@ public class FileRController {
             Path savePath = uploadPath.resolve(fileName);
             Files.copy(file.getInputStream(), savePath, StandardCopyOption.REPLACE_EXISTING);
 
-            String fileUrl = "http://localhost:8080/file/getimage?filename=" + fileName;
+            String fileUrl = "http://blog.winsam.xyz/api/file/getimage?filename=" + fileName;
 
             Map<String, String> result = new HashMap<>();
             result.put("url", fileUrl);
