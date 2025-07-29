@@ -12,4 +12,5 @@ public class BBSPostReqVO extends BasicVO {
     private String bbs_numb;
     private String post_subj;
     private String post_cnts;
+    private String thumbnail;
 }

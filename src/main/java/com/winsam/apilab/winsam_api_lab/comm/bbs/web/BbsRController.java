@@ -75,5 +75,4 @@ public class BbsRController {
         return ResponseEntity.ok().build();
     }// 게시글 삭제
 
-
 }

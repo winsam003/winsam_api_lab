@@ -13,4 +13,5 @@ public class BBSPatchReqVO extends BasicVO {
     private int post_numb;
     private String post_subj;
     private String post_cnts;
+    private String thumbnail;
 }

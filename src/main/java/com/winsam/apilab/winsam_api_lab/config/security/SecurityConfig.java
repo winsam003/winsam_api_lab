@@ -42,14 +42,16 @@ public class SecurityConfig {
 //                .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form.disable())
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(registry -> registry
-                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//                                .anyRequest().permitAll()  // 모든 요청 인증 없이 허용
-                        .requestMatchers("/auth/**").permitAll() // 인증 없이 허용
-                        .requestMatchers("/redis/**").permitAll() // 인증 없이 허용
-                        .requestMatchers("/bbs/**").permitAll() // 인증 없이 허용
+                .authorizeHttpRequests(registry -> registry.anyRequest().permitAll());
+//                .authorizeHttpRequests(registry -> registry
+//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+////                                .anyRequest().permitAll()  // 모든 요청 인증 없이 허용
+//                        .requestMatchers("/auth/**").permitAll() // 인증 없이 허용
+//                        .requestMatchers("/redis/**").permitAll() // 인증 없이 허용
+//                        .requestMatchers("/bbs/**").permitAll() // 인증 없이 허용
+//                        .requestMatchers("/bbs/uploads/**").permitAll()
 //                        .anyRequest().authenticated()            // 나머지는 인증 필요
-                );
+//                );
 //                .addFilterBefore(new TokenProcessFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
