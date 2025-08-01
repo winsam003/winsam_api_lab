@@ -43,24 +43,30 @@ public class TokenProvider {
     // Access Token 생성
     public String createAccessToken(TokenDTO tokenDTO) {
         return Jwts.builder()
-                .setSubject(tokenDTO.getUserId())
+                .setSubject(tokenDTO.getUserEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
-                .claim("userEmail", tokenDTO.getUserEmail())
+                .claim("userName", tokenDTO.getUserName())
+                .claim("userNickName", tokenDTO.getUserNickName())
                 .claim("userRole", tokenDTO.getUserRole())
+                .claim("picture", tokenDTO.getPicture())
+                .claim("email_verified", tokenDTO.isEmail_verified())
                 .compact();
     }
 
     // Refresh Token 생성
     public String createRefreshToken(TokenDTO tokenDTO) {
         return Jwts.builder()
-                .setSubject(tokenDTO.getUserId())
+                .setSubject(tokenDTO.getUserEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
-                .claim("userEmail", tokenDTO.getUserEmail())
+                .claim("userName", tokenDTO.getUserName())
+                .claim("userNickName", tokenDTO.getUserNickName())
                 .claim("userRole", tokenDTO.getUserRole())
+                .claim("picture", tokenDTO.getPicture())
+                .claim("email_verified", tokenDTO.isEmail_verified())
                 .compact();
     }
 

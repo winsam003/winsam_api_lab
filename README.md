@@ -22,4 +22,3 @@ server: http://blog.winsam.xyz
 9. 2025-07-25[front] : 기본 페이지 front 템플릿 구현
 10. 2025-07-25[front] : Markdown 형식 게시글 등록 화면 구현
 11. 2025-07-25[back] : 상세, 수정, 삭제 기본 구조 구현
-12. 2025-07-30[front/back] : 1차 블로그 런칭 

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 /**
  * ************************************************************************
  * File Name   : AuthRControllerPayload
@@ -25,7 +27,7 @@ public class AuthRControllerPayload {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class AuthLoginRequest{
-        String userId;
+        Map<String, Object> userInfo;
     }
 
     @Data

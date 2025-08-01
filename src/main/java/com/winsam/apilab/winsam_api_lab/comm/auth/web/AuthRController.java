@@ -5,11 +5,18 @@ import com.winsam.apilab.winsam_api_lab.comm.auth.payload.AuthRControllerPayload
 import com.winsam.apilab.winsam_api_lab.comm.auth.service.AuthWebService;
 import com.winsam.apilab.winsam_api_lab.comm.auth.token.TokenProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -37,8 +44,13 @@ public class AuthRController {
 
     TokenProvider tokenProvider = new TokenProvider();
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@ModelAttribute AuthRControllerPayload.AuthLoginRequest req){
+    @Value("${google.client.id}")
+    private String googleClientId;
+    @Value("${google.client.secret}")
+    private String googleClientSecret;
+
+    @PostMapping("/token")
+    public ResponseEntity<?> token(@ModelAttribute AuthRControllerPayload.AuthLoginRequest req){
 
         Map<String, String> returnToken = authWebService.getAuthJwtToken(req);
 
@@ -59,4 +71,131 @@ public class AuthRController {
 
         return ResponseEntity.ok(returnToken);
     }
+
+    public Map<String, String> setCookie(HttpServletResponse response, Map<String, Object> userInfo) {
+
+        /*
+        * userInfo 에 저장할 정보
+        * name // 구글
+        * nickName // 디비
+        * userRole // 디비
+        * picture // 구글
+        * email // 구글
+        * email_verified // 구글
+        * */
+
+        Map<String, String> TokenInfo = new HashMap<>();
+
+        // 1. 쿠키에 저장할 정보 set
+        AuthRControllerPayload.AuthLoginRequest req =  new AuthRControllerPayload.AuthLoginRequest();
+        req.setUserInfo(userInfo);
+
+        // 2. 정보 JWT 로 변환
+        Map<String, String> returnToken = authWebService.getAuthJwtToken(req);
+
+        String accessToken = returnToken.get("accessToken");
+        String refreshToken = returnToken.get("refreshToken");
+
+        // 3. JWT 쿠키에 add
+        Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(60 * 60); // 1시간 유효
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7일 유효
+
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
+
+        TokenInfo.put("accessToken", accessToken);
+        TokenInfo.put("refreshToken", refreshToken);
+
+        return TokenInfo;
+    }
+
+    @GetMapping("/google")
+    public void loginUrlGoogle(HttpServletResponse response) throws IOException {
+        String redirectUri = URLEncoder.encode("http://localhost:8080/auth/google/callback", "UTF-8");
+        String reqUrl = "https://accounts.google.com/o/oauth2/v2/auth" +
+                "?client_id=" + googleClientId + // 내 식별 아이디
+                "&redirect_uri=" + redirectUri + // 데이터 콜백받을 url
+                "&response_type=code" + // code는 Authorization Code Grant 방식 사용 (인증코드 방식)
+                "&scope=openid%20email%20profile" + // 사용자 동의 받기
+                "&access_type=offline"; // refresh token 받기
+
+        response.sendRedirect(reqUrl);
+    }
+
+    @GetMapping("/google/callback")
+    public ResponseEntity<?> googleCallback(@RequestParam("code") String code, HttpServletResponse response) {
+        // 받은 인가 코드(code)를 가지고 토큰 요청 등 처리
+        Map<String, Object> userInfo = authWebService.processGoogleOAuthCode(code);
+
+        // 1. 구글에서 받은 유저정보를 디비에 있는지 확인 [패스]
+        userInfo = this.hasNickName(userInfo);
+
+        // 2. 있다면 JWT 토큰 생성 후 쿠키 저장 후 hasNickName 를 Y 로 프론트 응답 [패스]
+        if(userInfo.get("nickName") != null || !"".equals(userInfo.get("nickName"))) {
+            Map<String, String> tokenInfo = this.setCookie(response, userInfo);
+
+            String script = "<script>" +
+                    "window.opener.postMessage({" +
+                    "type: 'google-auth-token', " +
+                    "hasNickName: '" + "Y" + "', " +
+                    "accessToken: '" + tokenInfo.get("accessToken") + "', " +
+                    "}, '*');" +
+                    "window.close();" +
+                    "</script>";
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.TEXT_HTML)
+                    .body(script);
+        }
+        // 3. 없다면 hasNickName 를 N 으로 프론트로 응답
+
+        String script = "<script>" +
+                "window.opener.postMessage({" +
+                "type: 'google-auth-token', " +
+                "hasNickName: '" + "N" + "', " +
+                "}, '*');" +
+                "window.close();" +
+                "</script>";
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_HTML)
+                .body(script);
+    }
+
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("accessToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // 즉시 만료시킴
+        response.addCookie(cookie);
+
+        Cookie refreshCookie = new Cookie("refreshToken", null);
+        refreshCookie.setHttpOnly(true);
+        refreshCookie.setSecure(true);
+        refreshCookie.setPath("/");
+        refreshCookie.setMaxAge(0);
+        response.addCookie(refreshCookie);
+
+        return ResponseEntity.ok("로그아웃 성공");
+    }
+
+    public Map<String, Object> hasNickName(Map<String, Object> userInfo) {
+
+        userInfo.put("nickName", "감자칩");
+        userInfo.put("userRole", "supervisor");
+
+        return userInfo;
+    }
+
+
 }

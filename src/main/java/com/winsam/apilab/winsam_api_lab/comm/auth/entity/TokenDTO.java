@@ -23,9 +23,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TokenDTO {
-    String userId;
+    String userName;
+    String userNickName;
     String userEmail;
     String userRole;
+    String picture;
     String accessToken;
     String refreshToken;
+    boolean email_verified;
 }

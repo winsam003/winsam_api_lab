@@ -24,5 +24,6 @@ public interface AuthWebService {
 
     Map<String, String> getAuthJwtToken(AuthRControllerPayload.AuthLoginRequest req);
     Map<String, String> getNewAuthJwtToken(AuthRControllerPayload.TokenRefreshRequest req);
+    public Map<String, Object> processGoogleOAuthCode(String code);
 
 }
