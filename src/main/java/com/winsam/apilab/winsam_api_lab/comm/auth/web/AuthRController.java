@@ -9,6 +9,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -138,35 +139,13 @@ public class AuthRController {
         userInfo = this.hasNickName(userInfo);
 
         // 2. 있다면 JWT 토큰 생성 후 쿠키 저장 후 hasNickName 를 Y 로 프론트 응답 [패스]
-        if(userInfo.get("nickName") != null || !"".equals(userInfo.get("nickName"))) {
-            Map<String, String> tokenInfo = this.setCookie(response, userInfo);
-
-            String script = "<script>" +
-                    "window.opener.postMessage({" +
-                    "type: 'google-auth-token', " +
-                    "hasNickName: '" + "Y" + "', " +
-                    "accessToken: '" + tokenInfo.get("accessToken") + "', " +
-                    "}, '*');" +
-                    "window.close();" +
-                    "</script>";
-
-            return ResponseEntity.ok()
-                    .contentType(MediaType.TEXT_HTML)
-                    .body(script);
-        }
+        if(userInfo.get("nickName") != null && !"".equals(userInfo.get("nickName"))) {
+            return this.successLogin(userInfo, response);
+        } else {
         // 3. 없다면 hasNickName 를 N 으로 프론트로 응답
+            return this.needNickName(userInfo, response);
+        }
 
-        String script = "<script>" +
-                "window.opener.postMessage({" +
-                "type: 'google-auth-token', " +
-                "hasNickName: '" + "N" + "', " +
-                "}, '*');" +
-                "window.close();" +
-                "</script>";
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.TEXT_HTML)
-                .body(script);
     }
 
 
@@ -189,10 +168,70 @@ public class AuthRController {
         return ResponseEntity.ok("로그아웃 성공");
     }
 
+    @PostMapping("/set-nickname")
+    public ResponseEntity<?> setNickNameAndLogin(@RequestBody TokenDTO TokenDTO, HttpServletResponse response) {
+        // 1. 디비에 닉네임과 함께 저장 [패스]
+
+        TokenDTO.setUserRole("friend");
+        TokenDTO.setEmail_verified(true);
+
+        // 2. JWT 발급, 쿠키 저장
+        Map<String, Object> userInfo = new HashMap<>();
+
+        userInfo.put("name", TokenDTO.getUserName());
+        userInfo.put("nickName", TokenDTO.getUserNickName());
+        userInfo.put("picture", TokenDTO.getPicture());
+        userInfo.put("email", TokenDTO.getUserEmail());
+        userInfo.put("userRole", TokenDTO.getUserRole());
+        userInfo.put("email_verified", TokenDTO.isEmail_verified());
+
+        return successLogin(userInfo, response);
+    }
+
+
+    // 닉네임 포함 모든 정보가 존재할 시 쿠키에 JWT 저장
+    public ResponseEntity<?> successLogin(Map<String, Object> userInfo, HttpServletResponse response) {
+
+        Map<String, String> tokenInfo = this.setCookie(response, userInfo);
+
+        String script = "<script>" +
+                "window.opener.postMessage({" +
+                "type: 'google-auth-token', " +
+                "hasNickName: '" + "Y" + "', " +
+                "accessToken: '" + tokenInfo.get("accessToken") + "', " +
+                "}, '*');" +
+                "window.close();" +
+                "</script>";
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_HTML)
+                .body(script);
+    }
+
+    // 닉네임이 없을 경우 닉네임 필요 요청
+    public ResponseEntity<?> needNickName(Map<String, Object> userInfo, HttpServletResponse response) {
+        String script = "<script>" +
+                "window.opener.postMessage({" +
+                "type: 'google-auth-token', " +
+                "hasNickName: '" + "N" + "', " +
+                "userName: '" + userInfo.get("name") + "', " +
+                "userEmail: '" + userInfo.get("email") + "', " +
+                "picture: '" + userInfo.get("picture") + "', " +
+                "}, '*');" +
+                "window.close();" +
+                "</script>";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, "text/html; charset=UTF-8")
+                .body(script);
+    }
+
     public Map<String, Object> hasNickName(Map<String, Object> userInfo) {
 
-        userInfo.put("nickName", "감자칩");
-        userInfo.put("userRole", "supervisor");
+//        userInfo.put("nickName", "감자칩");
+        userInfo.put("nickName", "");
+//        userInfo.put("userRole", "supervisor");
+        userInfo.put("userRole", "");
 
         return userInfo;
     }
