@@ -1,5 +1,6 @@
 package com.winsam.apilab.winsam_api_lab.comm.auth.web;
 
+import com.winsam.apilab.winsam_api_lab.comm.auth.entity.Memb_infoVO;
 import com.winsam.apilab.winsam_api_lab.comm.auth.entity.TokenDTO;
 import com.winsam.apilab.winsam_api_lab.comm.auth.payload.AuthRControllerPayload;
 import com.winsam.apilab.winsam_api_lab.comm.auth.service.AuthWebService;
@@ -102,11 +103,13 @@ public class AuthRController {
         accessTokenCookie.setHttpOnly(true);
         accessTokenCookie.setPath("/");
         accessTokenCookie.setMaxAge(60 * 60); // 1시간 유효
+        accessTokenCookie.setSecure(true); // Secure 추가
 
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setPath("/");
         refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7일 유효
+        refreshTokenCookie.setSecure(true); // Secure 추가
 
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
@@ -170,10 +173,13 @@ public class AuthRController {
 
     @PostMapping("/set-nickname")
     public ResponseEntity<?> setNickNameAndLogin(@RequestBody TokenDTO TokenDTO, HttpServletResponse response) {
-        // 1. 디비에 닉네임과 함께 저장 [패스]
+        // 1. 디비에 닉네임과 함께 저장
 
         TokenDTO.setUserRole("friend");
         TokenDTO.setEmail_verified(true);
+        TokenDTO.setSocial_root("Google");
+
+        authWebService.setMemberInfo(TokenDTO);
 
         // 2. JWT 발급, 쿠키 저장
         Map<String, Object> userInfo = new HashMap<>();
@@ -228,10 +234,17 @@ public class AuthRController {
 
     public Map<String, Object> hasNickName(Map<String, Object> userInfo) {
 
-//        userInfo.put("nickName", "감자칩");
-        userInfo.put("nickName", "");
-//        userInfo.put("userRole", "supervisor");
-        userInfo.put("userRole", "");
+        Memb_infoVO memb_infoVO = new Memb_infoVO();
+
+        memb_infoVO.setUseremail(userInfo.get("email").toString());
+
+        memb_infoVO = authWebService.getMemberInfo(memb_infoVO);
+
+        String nickName = (memb_infoVO != null && memb_infoVO.getUsernickname() != null) ? memb_infoVO.getUsernickname() : "";
+        String userRole = (memb_infoVO != null && memb_infoVO.getUserrole() != null) ? memb_infoVO.getUserrole() : "";
+
+        userInfo.put("nickName", nickName);
+        userInfo.put("userRole", userRole);
 
         return userInfo;
     }

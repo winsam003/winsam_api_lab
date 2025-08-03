@@ -1,9 +1,12 @@
 package com.winsam.apilab.winsam_api_lab.comm.auth.service.impl;
 
+import com.winsam.apilab.winsam_api_lab.comm.auth.entity.Memb_infoVO;
 import com.winsam.apilab.winsam_api_lab.comm.auth.entity.TokenDTO;
 import com.winsam.apilab.winsam_api_lab.comm.auth.payload.AuthRControllerPayload;
 import com.winsam.apilab.winsam_api_lab.comm.auth.service.AuthWebService;
 import com.winsam.apilab.winsam_api_lab.comm.auth.token.TokenProvider;
+import com.winsam.apilab.winsam_api_lab.comm.mapper.MembInfoPostgre;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpEntity;
@@ -40,6 +43,10 @@ public class AuthWebServiceImpl implements AuthWebService {
     private String googleClientId;
     @Value("${google.client.secret}")
     private String googleClientSecret;
+
+    @Autowired
+    MembInfoPostgre membInfoPostgre;
+
     @Override
     public Map<String, String> getAuthJwtToken(AuthRControllerPayload.AuthLoginRequest req) {
 
@@ -81,8 +88,6 @@ public class AuthWebServiceImpl implements AuthWebService {
         tokenDTO.setAccessToken(jwtToken.get("accessToken"));
         tokenDTO.setRefreshToken(jwtToken.get("refreshToken"));
 
-        System.out.println(tokenProvider.parseToken(tokenDTO.getAccessToken()));
-        System.out.println(tokenProvider.parseToken(tokenDTO.getRefreshToken()));
         return jwtToken;
     }
 
@@ -125,5 +130,15 @@ public class AuthWebServiceImpl implements AuthWebService {
 
         // 4. JWT 토큰 생성 후 결과 반환 (예시로 간단히 userInfo만 반환)
         return userInfo;
+    }
+
+    @Override
+    public Memb_infoVO getMemberInfo(Memb_infoVO memb_infoVO) {
+        return membInfoPostgre.getMembInfo(memb_infoVO);
+    }
+
+    @Override
+    public void setMemberInfo(TokenDTO tokenDTO) {
+        membInfoPostgre.membInfoInsert(tokenDTO);
     }
 }

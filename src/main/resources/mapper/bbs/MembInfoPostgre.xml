@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winsam.apilab.winsam_api_lab.comm.mapper.MembInfoPostgre">
+
+    <select id="getMembInfo" parameterType="com.winsam.apilab.winsam_api_lab.comm.auth.entity.Memb_infoVO" resultType="com.winsam.apilab.winsam_api_lab.comm.auth.entity.Memb_infoVO">
+        SELECT
+            *
+        FROM
+            common.memb_info
+        WHERE 1=1
+            AND useremail = #{useremail}
+            AND use_at = 'Y'
+        LIMIT 1
+    </select>
+
+    <insert id="membInfoInsert" parameterType="com.winsam.apilab.winsam_api_lab.comm.auth.entity.TokenDTO">
+        INSERT INTO
+            common.memb_info
+            (
+                social_root,
+                useremail,
+                usernickname,
+                userrole,
+                reg_user,
+                reg_date
+            )
+        VALUES
+            (
+                #{social_root},
+                #{userEmail},
+                #{userNickName},
+                #{userRole},
+                #{userEmail},
+                now()
+            )
+    </insert>
+</mapper>

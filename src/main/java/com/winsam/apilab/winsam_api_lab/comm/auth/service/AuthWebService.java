@@ -1,6 +1,7 @@
 package com.winsam.apilab.winsam_api_lab.comm.auth.service;
+import com.winsam.apilab.winsam_api_lab.comm.auth.entity.Memb_infoVO;
+import com.winsam.apilab.winsam_api_lab.comm.auth.entity.TokenDTO;
 import com.winsam.apilab.winsam_api_lab.comm.auth.payload.AuthRControllerPayload;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -22,8 +23,10 @@ import java.util.Map;
 
 public interface AuthWebService {
 
-    Map<String, String> getAuthJwtToken(AuthRControllerPayload.AuthLoginRequest req);
-    Map<String, String> getNewAuthJwtToken(AuthRControllerPayload.TokenRefreshRequest req);
+    public Map<String, String> getAuthJwtToken(AuthRControllerPayload.AuthLoginRequest req);
+    public Map<String, String> getNewAuthJwtToken(AuthRControllerPayload.TokenRefreshRequest req);
     public Map<String, Object> processGoogleOAuthCode(String code);
+    public Memb_infoVO getMemberInfo(Memb_infoVO memb_infoVO);
+    public void setMemberInfo(TokenDTO tokenDTO);
 
 }
