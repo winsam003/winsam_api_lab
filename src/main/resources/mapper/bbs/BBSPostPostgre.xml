@@ -17,9 +17,10 @@
 
     <select id="getBBSPostList" parameterType="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.BBSListReqVO" resultType="com.winsam.apilab.winsam_api_lab.comm.bbs.entity.BBSPostVO">
         SELECT
-            *
+            *,
+            (SELECT COUNT(*) FROM common.bbs_cmnt bc WHERE bc.bbs_no = bp.bbs_no AND use_at = 'Y') AS cmnt_count
         FROM
-            common.bbs_post
+            common.bbs_post bp
         WHERE 1=1
             AND use_at = 'Y'
             AND bbs_code = #{bbs_numb}
@@ -106,4 +107,51 @@
             AND use_at = 'Y'
     </update>
 
+    <select id="getCmntList" parameterType="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.cmnt.CmntReqVO" resultType="com.winsam.apilab.winsam_api_lab.comm.bbs.entity.CmntVO">
+        SELECT
+            *
+        FROM
+            common.bbs_cmnt bc
+                LEFT JOIN common.memb_info mi ON mi.USEREMAIL = bc.CMNT_USER
+        WHERE 1=1
+            AND bc.USE_AT = 'Y'
+            AND mi.USE_AT = 'Y'
+            AND bbs_no = #{bbs_no}
+    </select>
+
+    <insert id="postCmnt" parameterType="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.cmnt.CmntReqVO">
+        INSERT INTO
+            common.bbs_cmnt
+        (
+            bbs_no,
+            cmnt_user,
+            cmnt_cnts,
+            use_at,
+            reg_user,
+            reg_date
+        )
+        VALUES
+        (
+            #{bbs_no},
+            #{cmnt_user},
+            #{cmnt_cnts},
+            'Y',
+            #{reg_user},
+            now()
+        )
+    </insert>
+
+    <update id="patchCmnt" parameterType="com.winsam.apilab.winsam_api_lab.comm.bbs.payload.cmnt.CmntReqVO">
+        UPDATE common.bbs_cmnt
+        SET
+            <if test="cmnt_cnts != null and cmnt_cnts != ''">
+                cmnt_cnts = #{cmnt_cnts}
+            </if>
+            <if test="use_at != null and use_at != ''">
+                use_at = #{use_at}
+            </if>
+        WHERE 1=1
+            AND cmnt_no = #{cmnt_no}
+            AND use_at = 'Y'
+    </update>
 </mapper>

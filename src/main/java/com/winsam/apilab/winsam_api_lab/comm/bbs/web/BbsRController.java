@@ -1,6 +1,8 @@
 package com.winsam.apilab.winsam_api_lab.comm.bbs.web;
 
 import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.*;
+import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.cmnt.CmntReqVO;
+import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.cmnt.CmntResVO;
 import com.winsam.apilab.winsam_api_lab.comm.bbs.service.BBSCommService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -75,4 +77,27 @@ public class BbsRController {
         return ResponseEntity.ok().build();
     }// 게시글 삭제
 
+    // 댓글 읽기
+    @GetMapping("/cmnt/list/{bbs_no}")
+    public ResponseEntity<?> getCmntList(@PathVariable int bbs_no){
+        CmntReqVO reqVO = new CmntReqVO();
+        reqVO.setBbs_no(bbs_no);
+
+        CmntResVO resVO = bbsCommService.getCmntList(reqVO);
+
+        return ResponseEntity.ok(resVO);
+    }// 댓글 읽기
+    // 댓글 등록
+    @PostMapping("/cmnt/post")
+    public ResponseEntity<?> PostCmnt(@RequestBody CmntReqVO reqVO){
+        bbsCommService.postCmnt(reqVO);
+
+        return ResponseEntity.ok().build();
+    }// 댓글 등록
+    // 댓글 수정
+    @PatchMapping("/cmnt/patch")
+    public ResponseEntity<?> PatchCmnt(@RequestBody CmntReqVO reqVO){
+        bbsCommService.patchCmnt(reqVO);
+        return ResponseEntity.ok().build();
+    }// 댓글 수정
 }

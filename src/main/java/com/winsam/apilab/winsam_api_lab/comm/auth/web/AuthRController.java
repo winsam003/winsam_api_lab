@@ -175,7 +175,7 @@ public class AuthRController {
     public ResponseEntity<?> setNickNameAndLogin(@RequestBody TokenDTO TokenDTO, HttpServletResponse response) {
         // 1. 디비에 닉네임과 함께 저장
 
-        TokenDTO.setUserRole("friend");
+        TokenDTO.setUserRole("GUEST");
         TokenDTO.setEmail_verified(true);
         TokenDTO.setSocial_root("Google");
 

@@ -1,7 +1,9 @@
 package com.winsam.apilab.winsam_api_lab.comm.mapper;
 
 import com.winsam.apilab.winsam_api_lab.comm.bbs.entity.BBSPostVO;
+import com.winsam.apilab.winsam_api_lab.comm.bbs.entity.CmntVO;
 import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.*;
+import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.cmnt.CmntReqVO;
 
 import java.util.List;
 
@@ -27,4 +29,13 @@ public interface BBSPostPostgre {
 
     // 게시글 삭제
     int deleteBBSPost(BBSDeleteReqVO reqVO);
+
+    // 댓글 리스트
+    List<CmntVO> getCmntList(CmntReqVO reqVO);
+
+    // 댓글 추가
+    int postCmnt(CmntReqVO reqVO);
+
+    // 댓글 수정
+    int patchCmnt(CmntReqVO reqVO);
 }

@@ -1,11 +1,13 @@
 package com.winsam.apilab.winsam_api_lab.comm.bbs.payload;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.winsam.apilab.winsam_api_lab.comm.bbs.entity.CmntVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -24,4 +26,5 @@ public class BBSPostDetailResVO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     Timestamp updt_date;
     int read_cnt;
+    List<CmntVO> cmntVOList;
 }

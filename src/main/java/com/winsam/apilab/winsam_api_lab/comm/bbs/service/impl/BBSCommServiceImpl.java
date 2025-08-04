@@ -1,7 +1,10 @@
 package com.winsam.apilab.winsam_api_lab.comm.bbs.service.impl;
 
 import com.winsam.apilab.winsam_api_lab.comm.bbs.entity.BBSPostVO;
+import com.winsam.apilab.winsam_api_lab.comm.bbs.entity.CmntVO;
 import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.*;
+import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.cmnt.CmntReqVO;
+import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.cmnt.CmntResVO;
 import com.winsam.apilab.winsam_api_lab.comm.bbs.payload.comm.CommPagingResVO;
 import com.winsam.apilab.winsam_api_lab.comm.bbs.utill.UtillBox;
 import com.winsam.apilab.winsam_api_lab.comm.mapper.BBSPostPostgre;
@@ -55,6 +58,11 @@ public class BBSCommServiceImpl implements BBSCommService {
 
         bbsPostPostgre.PlusBBSPostReadCnt(reqVO);
         resVO = bbsPostPostgre.getBBSPostDetail(reqVO);
+
+
+        CmntReqVO cmntReqVO = new CmntReqVO();
+        cmntReqVO.setBbs_no(reqVO.getPost_numb());
+        resVO.setCmntVOList(bbsPostPostgre.getCmntList(cmntReqVO));
 
         return resVO;
     }// 게시글 상세
@@ -110,6 +118,29 @@ public class BBSCommServiceImpl implements BBSCommService {
         }
 
         return resVO;
+    }
+
+    @Override
+    public CmntResVO getCmntList(CmntReqVO reqVO) {
+
+        CmntResVO resVO = new CmntResVO();
+
+        resVO.setCmntVOList(bbsPostPostgre.getCmntList(reqVO));
+        if(resVO != null){
+            return resVO;
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public int postCmnt(CmntReqVO reqVO) {
+        return bbsPostPostgre.postCmnt(reqVO);
+    }
+
+    @Override
+    public int patchCmnt(CmntReqVO reqVO) {
+        return bbsPostPostgre.patchCmnt(reqVO);
     }
 }
 
