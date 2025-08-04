@@ -122,7 +122,10 @@ public class AuthRController {
 
     @GetMapping("/google")
     public void loginUrlGoogle(HttpServletResponse response) throws IOException {
-        String redirectUri = URLEncoder.encode("http://localhost:8080/auth/google/callback", "UTF-8");
+//        String redirectUri = URLEncoder.encode("http://blog.winsam.xyz/auth/google/callback", "UTF-8");
+//        String redirectUri = URLEncoder.encode("http://localhost:8080/auth/google/callback", "UTF-8");
+        String redirectUri = "http://blog.winsam.xyz/auth/google/callback";
+
         String reqUrl = "https://accounts.google.com/o/oauth2/v2/auth" +
                 "?client_id=" + googleClientId + // 내 식별 아이디
                 "&redirect_uri=" + redirectUri + // 데이터 콜백받을 url
