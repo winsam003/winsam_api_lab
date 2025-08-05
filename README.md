@@ -7,8 +7,8 @@
 
 
 ## 📰 front, back, server 모두 이곳에 기록
-front: https://github.com/winsam003/winsam_front_lab.git
-server: http://blog.winsam.xyz
+- front: https://github.com/winsam003/winsam_front_lab.git
+- server: http://blog.winsam.xyz
 
 # 📝 업데이트
 1. 2025-07-02[backend] : JWT를 활용한 토큰 구현
