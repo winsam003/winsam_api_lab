@@ -38,14 +38,25 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                .cors(Customizer.withDefaults())  // CORS 활성화
-//                .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form.disable())
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(registry -> registry.anyRequest().permitAll());
+                .authorizeHttpRequests(registry -> registry
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 허용
+                        .requestMatchers("/auth/**").permitAll()               // 필요 시 공개 API
+                        .requestMatchers("/redis/**").permitAll()
+                        .requestMatchers("/bbs/**").permitAll()
+                        .requestMatchers("/bbs/uploads/**").permitAll()
+                        .anyRequest().permitAll()                              // 나머지도 허용
+                );
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .cors(Customizer.withDefaults())  // CORS 활성화
+//                .httpBasic(Customizer.withDefaults())
+//                .formLogin(form -> form.disable())
+//                .csrf(csrf -> csrf.disable())
+//                .authorizeHttpRequests(registry -> registry.anyRequest().permitAll())
 //                .authorizeHttpRequests(registry -> registry
 //                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-////                                .anyRequest().permitAll()  // 모든 요청 인증 없이 허용
+//                                .anyRequest().permitAll()  // 모든 요청 인증 없이 허용
 //                        .requestMatchers("/auth/**").permitAll() // 인증 없이 허용
 //                        .requestMatchers("/redis/**").permitAll() // 인증 없이 허용
 //                        .requestMatchers("/bbs/**").permitAll() // 인증 없이 허용
@@ -64,7 +75,8 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "http://192.168.219.106:5173",
-                "http://blog.winsam.xyz"
+                "http://blog.winsam.xyz",
+                "https://blog.winsam.xyz"
         ));
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");

@@ -43,6 +43,8 @@ public class AuthWebServiceImpl implements AuthWebService {
     private String googleClientId;
     @Value("${google.client.secret}")
     private String googleClientSecret;
+    @Value("${google.redirect-uri}")
+    private String GOOGLE_REDIRECT_URI;
 
     @Autowired
     MembInfoPostgre membInfoPostgre;
@@ -100,8 +102,9 @@ public class AuthWebServiceImpl implements AuthWebService {
         params.add("code", code);
         params.add("client_id", googleClientId);
         params.add("client_secret", googleClientSecret);
+        params.add("redirect_uri", GOOGLE_REDIRECT_URI);
 //        params.add("redirect_uri", "http://localhost:8080/auth/google/callback");
-        params.add("redirect_uri", "http://blog.winsam.xyz/auth/google/callback");
+//        params.add("redirect_uri", "http://blog.winsam.xyz/auth/google/callback");
         params.add("grant_type", "authorization_code");
 
         HttpHeaders headers = new HttpHeaders();

@@ -17,7 +17,7 @@ public class CORSFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         String origin = request.getHeader("Origin");
-        if ("http://blog.winsam.xyz".equals(origin) || "http://localhost:5173".equals(origin)) {
+        if ("http://blog.winsam.xyz".equals(origin) || "https://blog.winsam.xyz".equals(origin) || "http://localhost:5173".equals(origin)) {
             response.setHeader("Access-Control-Allow-Origin", origin);
         }
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");

@@ -1,5 +1,6 @@
 package com.winsam.apilab.winsam_api_lab.comm.file.web;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +29,13 @@ import java.util.UUID;
 public class FileRController {
 
 //    private final String uploadDir = "C:/uploadfiles"; // 윈도우 경로 사용
-    private final String uploadDir = "/uploadfiles";
+//    private final String uploadDir = "/uploadfiles";
+
+    @Value("${file.server.url}")
+    private String FILE_SERVER_URL;
+
+    @Value("${file.uploadDir.url}")
+    private String uploadDir;
 
     @PostMapping("/upload")
     public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file){
@@ -52,7 +59,7 @@ public class FileRController {
             Path savePath = uploadPath.resolve(fileName);
             Files.copy(file.getInputStream(), savePath, StandardCopyOption.REPLACE_EXISTING);
 
-            String fileUrl = "http://blog.winsam.xyz/api/file/getimage?filename=" + fileName;
+            String fileUrl = FILE_SERVER_URL + fileName;
 
             Map<String, String> result = new HashMap<>();
             result.put("url", fileUrl);
