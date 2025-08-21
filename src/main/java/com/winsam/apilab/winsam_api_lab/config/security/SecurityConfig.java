@@ -37,15 +37,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .formLogin(form -> form.disable())
                 .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults()) // Bean으로 등록된 corsConfigurationSource() 자동 적용
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 허용
                         .requestMatchers("/auth/**").permitAll()               // 필요 시 공개 API
                         .requestMatchers("/redis/**").permitAll()
                         .requestMatchers("/bbs/**").permitAll()
                         .requestMatchers("/bbs/uploads/**").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
                         .anyRequest().permitAll()                              // 나머지도 허용
                 );
 //                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
